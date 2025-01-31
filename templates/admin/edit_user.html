@@ -1,0 +1,139 @@
+<html>
+  {% load static %}
+<head>
+    <link rel="icon" href="{% static '\images\JustLogo.png' %}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'admin.css' %}">
+</head>
+<body> 
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title text-center">
+                            Edit User
+                        </h1>
+                        <!-- Display user information -->
+                        <div>
+                            <label>Username:</label>
+                            <span>{{ user.username }}</span>
+                            <a href="#" id="changeUsernameLink">Change Username</a>
+                        </div>
+                        <div>
+                            <label>Password:</label>
+                            <span>**********</span>
+                            <a href="#" id="changePasswordLink">Change Password</a>
+                        </div>
+                        {% if request.user.role.role == 'admin' %}
+                            <div>
+                                <label>Roles:</label>
+                                <span>{{ user.role.role }}</span>
+                                <a href="#" id="changeRolesLink">Change Roles</a>
+                            </div>
+                        {% endif %}
+
+                        <!-- Form for changing username -->
+                        <form method="post" id="changeUsernameForm" style="display: none;">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="newUsername" class="form-label">New Username:</label>
+                                <input type="text" id="newUsername" name="new_username" class="form-control" placeholder="New Username" required>
+                            </div>
+                            <button type="submit" name="change_username" class="btn btn-outline-dark">Update Username</button>
+                        </form>
+
+                        <!-- Form for changing password -->
+                        {% if request.user.role.role == 'admin' %}
+                        <!-- Form for superusers to change password without old password -->
+                            <form method="post" id="changePasswordForm" style="display: none;">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <button type="submit" name="change_password" class="btn btn-outline-dark">Update Password</button>
+                            </form>
+                        {% else %}
+                            <form method="post" id="changePasswordForm" style="display: none;">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="id_old_password" class="form-label">Old Password:</label>
+                                    <input type="text" id="id_old_password" name="old_password" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="id_new_password1" class="form-label">New Password:</label>
+                                    <input type="text" id="id_new_password1" name="new_password1" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="id_new_password2" class="form-label">Confirm New Password:</label>
+                                    <input type="text" id="id_new_password2" name="new_password2" class="form-control" required>
+                                </div>
+                                <button type="submit" name="change_password" class="btn btn-outline-dark">Update Password</button>
+                            </form>
+                        {% endif %}
+                        <form method="post" id="changeRolesForm" style="display: none;">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="newRole" class="form-label">New Role:</label>
+                                <select id="newRole" name="new_role" class="form-select" required>
+                                    {% for role_key, role_display in roles %}
+                                        <option value="{{ role_key }}"
+                                                {% if role_key == user.role.role %} selected {% endif %}>
+                                            {{ role_display }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit" name="change_roles" class="btn btn-outline-dark">Update Roles</button>
+                        </form>
+                        <br></br>
+                        <a href="{% url 'cancel_user' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Your scripts and necessary modifications for toggling forms -->
+<script src="https://kit.fontawesome.com/8ec87353a2.js" crossorigin="anonymous"></script>
+<!-- Add these scripts within the <head> or at the end of the <body> in your HTML -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const changeUsernameLink = document.getElementById('changeUsernameLink');
+            const changePasswordLink = document.getElementById('changePasswordLink');
+            const changeUsernameForm = document.getElementById('changeUsernameForm');
+            const changePasswordForm = document.getElementById('changePasswordForm');
+            const changeRolesLink = document.getElementById('changeRolesLink');
+            const changeRolesForm = document.getElementById('changeRolesForm');
+            const newUsernameInput = document.getElementById('newUsername');
+            const newPasswordInput = document.getElementById('newPassword');
+            const confirmNewPasswordInput = document.getElementById('confirmNewPassword');
+    
+            changeUsernameLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                changePasswordForm.style.display = 'none';
+                changeRolesForm.style.display = 'none';  // Hide the roles form
+                changeUsernameForm.style.display = 'block';
+                newUsernameInput.disabled = false;
+                newPasswordInput.disabled = true;
+                confirmNewPasswordInput.disabled = true;
+            });
+    
+            changePasswordLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                changeUsernameForm.style.display = 'none';
+                changeRolesForm.style.display = 'none';  // Hide the roles form
+                changePasswordForm.style.display = 'block';
+                newPasswordInput.disabled = false;
+                confirmNewPasswordInput.disabled = false;
+                newUsernameInput.disabled = true;
+            });
+    
+            changeRolesLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                changeUsernameForm.style.display = 'none';
+                changePasswordForm.style.display = 'none';
+                changeRolesForm.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>

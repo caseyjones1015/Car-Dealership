@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'common.css' %}">
+
+{% block content %}
+<div class="container text-grey" id="jeans">
+    <p><b>Sales Stats</b></p>
+  </div>
+  <div id="car-list" class="row w-800">
+    {% for car in sold_cars %}
+      <div class="col l3 s6 car-item">
+        <a href="{% url 'car_details' car_id=car.id %}">
+          <div class="container image-container">
+            {% if car.carimage_set.exists %}
+              <img src="{% static car.carimage_set.first.image.url %}" class="car-image">
+            {% else %}
+              <img src="#" class="car-image"> <!-- Placeholder or handling when there's no image -->
+            {% endif %}
+            <p class="font1 textWhite"><b>{{ car.car_model.brand.name }} / {{ car.car_model.name }}</b></p>
+            <p class="font1 textWhite"><b>{{ car.year }}</b></p>
+            <p class="font1 textWhite"><b>${{ car.price }}</b></p>
+            {% if car.optional %}
+            <p class="alignLeft textWhite">Optional</p>
+            {% endif %}
+          </div>
+        </a>
+      </div>
+    {% endfor %}
+</div>
+{% endblock %}

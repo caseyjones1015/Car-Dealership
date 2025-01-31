@@ -1,0 +1,58 @@
+<!-- add_car_brand.html -->
+
+<!DOCTYPE html>
+<html>
+    {% load static %}
+<head>
+    <title>Add Car Model</title>
+    <link rel="icon" href="{% static '\images\JustLogo.png' %}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="{% static 'admin.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title text-center">
+                            {% if car_model %} Edit Car Model {% else %} Add Car Model {% endif %}
+                        </h1>
+                        <form method="post">
+                            {% csrf_token %}
+                            {% if car_model %}
+                                <input type="hidden" name="model_id" value="{{ car_model.id }}">
+                            {% endif %}
+                            <div class="col-auto">
+                                {% if car_brand %}
+                                <select class="form-select" aria-label="Disabled select example" disabled>
+                                    <option selected>{{ car_brand.name }}</option>
+                                </select>
+                                {% else %}
+                                <select class="form-select" aria-label="Default select example" name="car_brand">
+                                    <option selected>Choose Car Brand</option>
+                                    {% for brand in car_brands %}
+                                    <option value="{{ brand.id }}">{{ brand.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="model_name" class="form-label">Car Model Name:</label>
+                                <input type="text" id="model_name" name="model_name" class="form-control" aria-describedby="modelHelpInline" {% if car_model %} value="{{ car_model.name }}" {% endif %} required>
+                            </div>
+                            <div class="text-center">
+                                <a href="{% url 'cancel_model' %}" class="btn btn-outline-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-outline-dark">
+                                    {% if car_model %} Update {% else %} Submit {% endif %}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

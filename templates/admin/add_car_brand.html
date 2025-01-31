@@ -1,0 +1,46 @@
+<!-- add_car_brand.html -->
+
+<!DOCTYPE html>
+<html>
+  {% load static %}
+<head>
+    <title>Add Car Brand</title>
+    <link rel="icon" href="{% static '\images\JustLogo.png' %}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'admin.css' %}">
+</head>
+<body> 
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title text-center">
+                            {% if brand %} Edit Car Brand {% else %} Add Car Brand {% endif %}
+                        </h1>
+                        <form method="post">
+                            {% csrf_token %}
+                            <!-- Include a hidden input field to handle brand_id -->
+                            {% if brand %}
+                                <input type="hidden" name="brand_id" value="{{ brand.id }}">
+                            {% endif %}
+                            <div class="mb-3">
+                                <label for="inputBrandName" class="form-label">Car Brand Name:</label>
+                                <input type="text" id="inputBrandName" name="brand_name" class="form-control" aria-describedby="brandNameHelp" value="{% if brand %}{{ brand.name }}{% endif %}" required>
+                            </div>
+                            <div class="text-center marginT1">
+                                <a href="{% url 'cancel_brand' %}" class="btn btn-outline-secondary">Cancel</a>
+                                </button>
+                                <button type="submit" class="btn btn-outline-dark">
+                                    {% if brand %} Update {% else %} Submit {% endif %}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'common.css' %}">
+<!DOCTYPE html>
+
+{% block content %}
+<div class="display-container container p0">
+  <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item img active">
+        <img src="\static\images\bugattichiron.jpg" class="d-block" alt="slide1">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Bugatti Chiron</h5>
+          <p>Super Car</p>
+        </div>
+      </div>
+      <div class="carousel-item img">
+        <img src="\static\images\lamboSC18.jpg" class="d-block" alt="slide2">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Lambo SC18</h5>
+          <p>Super Car</p>
+        </div>
+      </div>
+      <div class="carousel-item img">
+        <img src="\static\images\koenigseggGemera.jpg" class="d-block" alt="slide3">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Koenigsegg Gemera</h5>
+          <p>Super Car</p>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>
+{% if request.path == '/home/' %}
+{% else %}
+<div class="container text-grey" id="jeans">
+  <p><b>{{ car_brand.name }} - {{ car_model.name}}</b></p>
+</div>
+{% endif %}
+<div id="car-list" class="row p0 ml-0">
+  {% for car in cars %}
+    {% if car.available %}
+      <div class="col l3 s6 car-item p0">
+        <a href="{% url 'car_details' car_id=car.id %}">
+          <div class="container image-container">
+            {% if car.carimage_set.exists %}
+              <img src="{% static car.carimage_set.first.image.url %}" class="car-image">
+            {% else %}
+              <img src="#" class="car-image"> <!-- Placeholder or handling when there's no image -->
+            {% endif %}
+            {% if request.path == '/home/' %}
+            <p class="font1 textWhite"><b>{{ car.car_model.brand.name }} / {{ car.car_model.name }}</b></p>
+            {% endif %}
+            <p class="font1 textWhite"><b>{{ car.year }}</b></p>
+            <p class="font1 textWhite"><b>${{ car.price }}</b></p>
+          </div>
+        </a>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,115 @@
+<!-- add_car_brand.html -->
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Car</title>
+    <link rel="icon" href="{% static '\images\JustLogo.png' %}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'admin.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title text-center">
+                            {% if car %} Edit Car {% else %} Add Car {% endif %}
+                        </h1>
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% if car %}
+                                <input type="hidden" name="car_id" value="{{ car.id }}">
+                            {% endif %}
+                            <div class="col-auto">
+                                {% if car_model %}
+                                <select class="form-select" aria-label="Disabled select example" disabled>
+                                    <option selected>{{ car_model.name }}</option>
+                                </select>
+                                {% else %}
+                                <select class="form-select" aria-label="Default select example" name="car">
+                                    <option selected>Choose Car Model</option>
+                                    {% for model in car_models %}
+                                    <option value="{{ model.id }}">{{ model.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="year" class="form-label">Year:</label>
+                                <input type="text" id="year" name="year" class="form-control" aria-describedby="carHelpInline" {% if car_model %} value="{{ car.year }}" {% endif %}required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="price" class="form-label">Price:</label>
+                                <input type="text" id="price" name="price" class="form-control" aria-describedby="carHelpInline" {% if car_model %} value="{{ car.price }}" {% endif %}required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="kilo" class="form-label">Kilo:</label>
+                                <input type="text" id="kilo" name="kilo" class="form-control" aria-describedby="carHelpInline" {% if car_model %} value="{{ car.mileage }}" {% endif %}required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="grade" class="form-label">Grade:</label>
+                                <input type="text" id="grade" name="grade" class="form-control" aria-describedby="carHelpInline" {% if car_model %} value="{{ car.grade }}" {% endif %}>
+                            </div>
+                            <div class="mb-3">
+                                <label for="color" class="form-label">Color:</label>
+                                <input type="text" id="color" name="color" class="form-control" aria-describedby="carHelpInline" {% if car_model %} value="{{ car.color }}" {% endif %}>
+                            </div>
+                            <div class="mb-3">
+                                <label for="seater" class="form-label">Seater:</label>
+                                <input type="text" id="seater" name="seater" class="form-control" aria-describedby="carHelpInline" {% if car_model %} value="{{ car.seater }}" {% endif %}>
+                            </div>
+                            <div class="mb-3">
+                                <label for="optional" class="form-label">Optional:</label>
+                                <textarea id="optionalText" name="optional" class="form-control" rows="4">{% if car_model %}{{ optional }}{% endif %}</textarea>
+                            </div>                            
+                            {% if car %}
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" name="available" id="available" {% if car.available %} checked {% endif %}>
+                                    <label class="form-check-label" for="available">
+                                        Available
+                                    </label>
+                                </div>                            
+                            {% else %}
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" name="available" value="true" id="available" checked>
+                                    <label class="form-check-label" for="available">
+                                    Available
+                                    </label>
+                                </div>
+                            {% endif %}
+                            <div class="input-group">
+                                <label for="car_images" class="form-label"></label>
+                                <input type="file" id="car_images" name="car_images" class="form-control" aria-describedby="carHelpInline" accept="image/*" multiple>
+                                <small id="carHelpInline" class="text-muted custom-input">Max 3 images allowed</small>
+                            </div>
+                            <div class="input-group mt-3">
+                                <label for="additional_images" class="form-label"></label>
+                                <input type="file" id="additional_images" name="additional_images" class="form-control" aria-describedby="additionalCarHelpInline" accept="image/*" multiple>
+                                <small id="additionalCarHelpInline" class="text-muted custom-input">Additional Images</small>
+                            </div>
+                            <div class="text-center marginT1">
+                                <a href="{% url 'cancel_car' %}" class="btn btn-outline-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-outline-dark">
+                                    {% if car %} Update {% else %} Submit {% endif %}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('car_images').addEventListener('change', function() {
+            var input = this;
+            if (input.files && input.files.length > 3) {
+                alert("You can only select up to 3 images");
+                input.value = ''; // Clear the selected files
+            }
+        });
+    </script>    
+</body>
+</html>
