@@ -1,0 +1,27 @@
+.custom-container {
+    margin-top: 50px;
+}
+
+.marginT1 {
+    margin-top: 1rem;
+}
+
+.textNone {
+    text-decoration: underline !important;
+}
+
+.mr-10 {
+    margin-right:10px !important;
+}
+
+.custom-container {
+    background-color: #f0f0f0; /* Set your desired background color */
+    padding: 20px; /* Add padding for spacing */
+    border-radius: 10px; /* Optionally add border-radius */
+    margin-bottom: 20px; /* Optionally add margin */
+}
+
+.custom-input {
+    margin-left: 12px !important;
+    margin-top: 8px;
+}
